@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhea Mae | Creative Portfolio</title>
+    <style>
+        :root {
+            --bg-color: #f5f7fa;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --accent-color: #007bff;
+            --accent-glow: rgba(0, 123, 255, 0.2);
+            --text-main: #2d3436;
+            --text-dim: #636e72;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        .dark-mode {
+            --bg-color: #05070a;
+            --card-bg: rgba(17, 22, 34, 0.7);
+            --accent-color: #00f2ff;
+            --accent-glow: rgba(0, 242, 255, 0.3);
+            --text-main: #ffffff;
+            --text-dim: #a1a1aa;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --nav-bg: rgba(10, 10, 10, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: all 0.4s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* --- FRONT PAGE (GET STARTED) --- */
+        #front-page {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        #front-page.hidden { transform: translateY(-100%); }
+
+        .get-started-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px var(--accent-glow);
+            transition: 0.3s;
+        }
+
+        /* --- THEME TOGGLE (RADIO STYLE) --- */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px; width: 14px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--accent-color); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* --- BACKGROUND DECORATION --- */
+        .bg-glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            filter: blur(120px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.15;
+            animation: float 20s infinite alternate;
+        }
+        .glow-1 { background: var(--accent-color); top: -10%; left: -10%; }
+        .glow-2 { background: #7000ff; bottom: -10%; right: -10%; }
+
+        @keyframes float {
+            from { transform: translate(0,0); }
+            to { transform: translate(100px, 50px); }
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 25px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn {
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+            background: transparent;
+            border: none;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--accent-color);
+            color: #fff;
+        }
+
+        /* --- CONTENT AREA --- */
+        .content-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 120px;
+            padding: 20px;
+        }
+
+        .section {
+            display: none;
+            animation: slideUp 0.6s ease forwards;
+        }
+
+        .section.active { display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+        }
+
+        /* --- HOME --- */
+        .hero-layout { display: flex; align-items: center; gap: 40px; margin-bottom: 20px; }
+        .avatar { width: 150px; height: 150px; border-radius: 40px; border: 3px solid var(--accent-color); object-fit: cover; }
+        .hero-text h3 { color: var(--accent-color); letter-spacing: 3px; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 10px; }
+        .hero-text h1 { font-size: 2.8rem; line-height: 1.1; margin-bottom: 10px; }
+        .bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+        /* --- SKILLS --- */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .skill-item { margin-bottom: 15px; }
+        .skill-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 600; }
+        .skill-bar-bg { background: rgba(0,0,0,0.05); height: 10px; border-radius: 10px; overflow: hidden; }
+        .dark-mode .skill-bar-bg { background: rgba(255,255,255,0.1); }
+        .skill-bar-fill { background: var(--accent-color); height: 100%; border-radius: 10px; }
+
+        /* --- PROJECTS CREATIVE STYLE --- */
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .project-box { 
+            background: var(--card-bg); 
+            border-radius: 25px; 
+            overflow: hidden; 
+            border: 1px solid var(--border-color);
+            transition: 0.3s;
+        }
+        .project-box:hover { transform: translateY(-10px); }
+        .project-img { width: 100%; height: 200px; object-fit: cover; background: #eee; }
+        .project-content { padding: 25px; }
+        
+        .view-work-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            width: 100%;
+            border-radius: 12px;
+            border: 2px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .view-work-btn:hover { background: var(--accent-color); color: #fff; }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--bg-color);
+            max-width: 600px;
+            width: 100%;
+            border-radius: 30px;
+            padding: 40px;
+            position: relative;
+        }
+        .close-modal { position: absolute; top: 20px; right: 25px; font-size: 2rem; cursor: pointer; }
+
+        /* --- REFLECTION --- */
+        .reflection-item { margin-bottom: 30px; padding-left: 20px; border-left: 4px solid var(--accent-color); }
+
+        @media (max-width: 768px) {
+            .hero-layout { flex-direction: column; text-align: center; }
+            .bento-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="front-page">
+        <h1 style="font-size: 2.5rem; margin-bottom: 20px;">Welcome to My Portfolio</h1>
+        <button class="get-started-btn" onclick="getStarted()">Get Started</button>
+    </div>
+
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <nav>
+        <button class="nav-btn active" onclick="showSection('home', this)">Home</button>
+        <button class="nav-btn" onclick="showSection('skills', this)">Skills</button>
+        <button class="nav-btn" onclick="showSection('projects', this)">Projects</button>
+        <button class="nav-btn" onclick="showSection('reflection', this)">Reflection</button>
+        <div class="theme-switch-wrapper">
+            <label class="switch">
+                <input type="checkbox" onchange="toggleTheme()">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </nav>
+
+    <main class="content-wrapper">
+        
+        <section id="home" class="section active">
+            <div class="card">
+                <div class="hero-layout">
+                    <img src="Profile.jpg" alt="Rhea Mae Ramos" class="avatar">
+                    <div class="hero-text">
+                        <h3>Creative Developer</h3>
+                        <h1>Hi, I'm <span style="color: var(--accent-color);">Rhea Mae N. Ramos</span></h1>
+                        <p style="color: var(--text-dim);">Developer passionate about creating helpful and clean web solutions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-grid">
+                <div class="card">
+                    <h4 style="color: var(--accent-color); margin-bottom: 10px;">Biggest Accomplishment</h4>
+                    <p style="font-size: 0.95rem; line-height: 1.6;">Passing the <strong>NCII in Computer Systems Servicing</strong>, which solidified my foundation in technical troubleshooting and hardware.</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--accent-color); margin-bottom: 10px;">Area of Interest</h4>
+                    <p style="font-size: 0.95rem; line-height: 1.6;">I am very interested in <strong>Full Stack Web Development</strong>. To build dynamic and responsive website.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4 style="color: var(--accent-color); margin-bottom: 10px;">My Goals</h4>
+                <p style="font-size: 0.95rem; line-height: 1.6;">My goal is to build helpful online applications that make daily tasks easier for people. I want to use my coding skills to create clean and useful tools for the community.</p>
+            </div>
+        </section>
+
+        <section id="skills" class="section">
+            <div class="card">
+                <h2 style="margin-bottom: 30px;">Technical Toolkit</h2>
+                <div class="skills-grid">
+                    <div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span>🌐 HTML5 / CSS3</span><span>85%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%;"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span>🐘 PHP</span><span>80%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span>📜 JavaScript</span><span>85%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 75%;"></div></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span>🗄️ MySQL / XAMPP</span><span>83%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span>🐙 GitHub</span><span>85%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%;"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span>💻 VS Code</span><span>83%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="section">
+            <h2 style="margin-bottom: 25px; padding-left: 10px;">Selected Projects</h2>
+            <div class="project-grid">
+                <div class="project-box">
+                    <img src="Profiling.jpg" alt="Barangay Profiling" class="project-img">
+                    <div class="project-content">
+                        <h4>Barangay Profiling System</h4>
+                        <button class="view-work-btn" onclick="openProject('barangay')">View Work</button>
+                    </div>
+                </div>
+                <div class="project-box">
+                    <img src="TrackingandMonitoring.jpg" alt="Bus Tracking" class="project-img">
+                    <div class="project-content">
+                        <h4>Bus Tracking & Schedule Monitoring</h4>
+                        <button class="view-work-btn" onclick="openProject('bus')">View Work</button>
+                    </div>
+                </div>
+                <div class="project-box">
+                    <img src="StudyPortal.jpg" alt="Smart Study" class="project-img">
+                    <div class="project-content">
+                        <h4>Smart Study App</h4>
+                        <button class="view-work-btn" onclick="openProject('study')">View Work</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reflection" class="section">
+            <div class="card">
+                <h2 style="margin-bottom: 40px;">Self-Reflection</h2>
+                <div class="reflection-item">
+                    <h4>a. What technologies did you use and why?</h4>
+                    <p style="color: var(--text-dim);">I used <strong>HTML, CSS, and JavaScript</strong> for the design and the <strong>modern style</strong>, which makes the site look modern and clean. I also used <strong>PHP and MySQL</strong> for my projects because they are great for handling information and building systems that need a database, like my profiling and tracking tools.</p>
+                </div>
+                <div class="reflection-item">
+                    <h4>b. Which parts of the portfolio were easiest for you?</h4>
+                    <p style="color: var(--text-dim);">The easiest part for me was planning the layout and organizing the text. I enjoyed writing about my background and my school projects because it helped me see how much I have learned since I started coding.</p>
+                </div>
+                <div class="reflection-item">
+                    <h4>c. Which parts were most challenging?</h4>
+                    <p style="color: var(--text-dim);">The hardest part was the <strong>JavaScript logic</strong> that hides and shows the different sections. I had to make sure that when you click a button, only the right page appears without any errors. It was tough, but it makes the website much faster and better to use.</p>
+                </div>
+                <div class="reflection-item">
+                    <h4>d. What technologies are you most interested in learning?</h4>
+                    <p style="color: var(--text-dim);">I am really interested in learning <strong>React.js</strong> and <strong>Laravel</strong>. These are popular tools used in the industry, and learning them will help me build more advanced and professional web applications in the future.</p>
+                </div>
+                <div class="reflection-item" style="border:none;">
+                    <h4>e. What kind of applications do you want to build in the future?</h4>
+                    <p style="color: var(--text-dim);">In the future, I want to build <strong>online applications</strong> that make daily tasks easier for people. I want to use my coding skills to create clean and useful tools for the community.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modal-data"></div>
+        </div>
+    </div>
+
+    <script>
+        function getStarted() { document.getElementById('front-page').classList.add('hidden'); }
+
+        function showSection(sectionId, btn) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            const btns = document.querySelectorAll('.nav-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+
+        const projectDetails = {
+            'barangay': { title: 'Barangay Profiling System', date: 'Finished: 2023', desc: 'A database system to manage resident information efficiently. Built with HTML, CSS, PHP, and XAMPP.', ref: 'I learned how to structure complex databases and handle CRUD operations safely.' },
+            'bus': { title: 'Bus Tracking & Schedule Monitoring', date: 'Finished: 2025', desc: 'Monitoring bus locations and arrival times. Technologies used: PHP, MySQL, and responsive CSS.', ref: 'It was challenging to sync time schedules, but it improved my logic in backend development.' },
+            'study': { title: 'Smart Study App', date: 'Finished: 2025', desc: 'An academic tool to organize study schedules. Developed using PHP, HTML, and custom CSS styling.', ref: 'I focused on user experience to ensure students can easily navigate their tasks.' }
+        };
+
+        function openProject(key) {
+            const p = projectDetails[key];
+            document.getElementById('modal-data').innerHTML = `
+                <h2 style="color:var(--accent-color); margin-bottom:10px;">${p.title}</h2>
+                <p style="color:var(--text-dim); font-size:0.9rem; margin-bottom:15px;">${p.date}</p>
+                <p style="margin-bottom:15px;"><strong>Description:</strong> ${p.desc}</p>
+                <p><strong>Reflection:</strong> ${p.ref}</p>
+            `;
+            document.getElementById('projectModal').style.display = 'flex';
+        }
+        function closeModal() { document.getElementById('projectModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
