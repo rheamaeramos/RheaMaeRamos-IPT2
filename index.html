@@ -14,6 +14,7 @@
             --text-dim: #636e72;
             --border-color: rgba(0, 0, 0, 0.08);
             --nav-bg: rgba(255, 255, 255, 0.8);
+            --reflection-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
         }
 
         .dark-mode {
@@ -45,159 +46,132 @@
             overflow-x: hidden;
         }
 
-        /* --- FRONT PAGE (GET STARTED) --- */
+        /* --- LIGHT FRONT PAGE --- */
         #front-page {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color);
+            background: #ffffff;
+            color: #2d3436;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             z-index: 2000;
             transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            overflow: hidden;
         }
 
-        #front-page.hidden { transform: translateY(-100%); }
+        #front-page::before {
+            content: '';
+            position: absolute;
+            width: 400px; height: 400px;
+            background: var(--accent-glow);
+            filter: blur(100px);
+            top: -100px; right: -100px;
+            z-index: 1;
+        }
+
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1100px;
+            padding: 0 50px;
+            gap: 40px;
+            z-index: 2;
+        }
+
+        .hero-left h3 {
+            font-size: 1rem;
+            letter-spacing: 4px;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .hero-left h1 {
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .hero-left p {
+            color: #636e72;
+            max-width: 450px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .hero-right img {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 30px;
+            box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+        }
 
         .get-started-btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 14px 35px;
             font-weight: 700;
             color: #fff;
             background: var(--accent-color);
             border: none;
-            border-radius: 50px;
+            border-radius: 15px;
             cursor: pointer;
             box-shadow: 0 10px 20px var(--accent-glow);
             transition: 0.3s;
         }
 
-        /* --- THEME TOGGLE (RADIO STYLE) --- */
-        .theme-switch-wrapper {
+        .get-started-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 25px var(--accent-glow); }
+
+        #front-page.hidden { transform: translateY(-100%); }
+
+        /* --- BACK ARROW --- */
+        .back-arrow {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            z-index: 1100;
+            background: var(--nav-bg);
+            border: 1px solid var(--border-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-left: 10px;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
-
-        .switch input { opacity: 0; width: 0; height: 0; }
-
-        .slider {
-            position: absolute;
+            justify-content: center;
             cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+            color: var(--text-main);
         }
+        .back-arrow:hover { background: var(--accent-color); color: white; transform: scale(1.1); }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 14px; width: 14px;
-            left: 3px; bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
+        /* --- THEME TOGGLE --- */
+        .theme-switch-wrapper { display: flex; align-items: center; gap: 8px; margin-left: 10px; }
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--accent-color); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* --- BACKGROUND DECORATION --- */
-        .bg-glow {
-            position: fixed;
-            width: 500px;
-            height: 500px;
-            filter: blur(120px);
-            border-radius: 50%;
-            z-index: -1;
-            opacity: 0.15;
-            animation: float 20s infinite alternate;
-        }
-        .glow-1 { background: var(--accent-color); top: -10%; left: -10%; }
-        .glow-2 { background: #7000ff; bottom: -10%; right: -10%; }
-
-        @keyframes float {
-            from { transform: translate(0,0); }
-            to { transform: translate(100px, 50px); }
-        }
-
         /* --- NAVIGATION --- */
-        nav {
-            position: fixed;
-            top: 25px;
-            background: var(--nav-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            padding: 8px 15px;
-            border-radius: 100px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-
-        .nav-btn {
-            color: var(--text-main);
-            padding: 10px 20px;
-            border-radius: 100px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: 0.3s;
-            background: transparent;
-            border: none;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            background: var(--accent-color);
-            color: #fff;
-        }
+        nav { position: fixed; top: 25px; background: var(--nav-bg); backdrop-filter: blur(20px); border: 1px solid var(--border-color); padding: 8px 15px; border-radius: 100px; display: flex; align-items: center; gap: 5px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .nav-btn { color: var(--text-main); padding: 10px 20px; border-radius: 100px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.3s; background: transparent; border: none; }
+        .nav-btn:hover, .nav-btn.active { background: var(--accent-color); color: #fff; }
 
         /* --- CONTENT AREA --- */
-        .content-wrapper {
-            width: 100%;
-            max-width: 1000px;
-            margin-top: 120px;
-            padding: 20px;
-        }
-
-        .section {
-            display: none;
-            animation: slideUp 0.6s ease forwards;
-        }
-
+        .content-wrapper { width: 100%; max-width: 1000px; margin-top: 120px; padding: 20px; }
+        .section { display: none; animation: slideUp 0.6s ease forwards; }
         .section.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--border-color);
-            border-radius: 30px;
-            padding: 40px;
-            margin-bottom: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
-        }
+        .card { background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 30px; padding: 40px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.03); }
 
         /* --- HOME --- */
         .hero-layout { display: flex; align-items: center; gap: 40px; margin-bottom: 20px; }
         .avatar { width: 150px; height: 150px; border-radius: 40px; border: 3px solid var(--accent-color); object-fit: cover; }
-        .hero-text h3 { color: var(--accent-color); letter-spacing: 3px; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 10px; }
         .hero-text h1 { font-size: 2.8rem; line-height: 1.1; margin-bottom: 10px; }
         .bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 
@@ -206,76 +180,63 @@
         .skill-item { margin-bottom: 15px; }
         .skill-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 600; }
         .skill-bar-bg { background: rgba(0,0,0,0.05); height: 10px; border-radius: 10px; overflow: hidden; }
-        .dark-mode .skill-bar-bg { background: rgba(255,255,255,0.1); }
         .skill-bar-fill { background: var(--accent-color); height: 100%; border-radius: 10px; }
 
-        /* --- PROJECTS CREATIVE STYLE --- */
+        /* --- PROJECTS --- */
         .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .project-box { 
-            background: var(--card-bg); 
-            border-radius: 25px; 
-            overflow: hidden; 
-            border: 1px solid var(--border-color);
-            transition: 0.3s;
-        }
+        .project-box { background: var(--card-bg); border-radius: 25px; overflow: hidden; border: 1px solid var(--border-color); transition: 0.3s; }
         .project-box:hover { transform: translateY(-10px); }
         .project-img { width: 100%; height: 200px; object-fit: cover; background: #eee; }
         .project-content { padding: 25px; }
-        
-        .view-work-btn {
-            margin-top: 15px;
-            padding: 10px 20px;
-            width: 100%;
-            border-radius: 12px;
-            border: 2px solid var(--accent-color);
-            background: transparent;
-            color: var(--accent-color);
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        .view-work-btn { margin-top: 15px; padding: 10px 20px; width: 100%; border-radius: 12px; border: 2px solid var(--accent-color); background: transparent; color: var(--accent-color); font-weight: 700; cursor: pointer; transition: 0.3s; }
         .view-work-btn:hover { background: var(--accent-color); color: #fff; }
 
-        /* --- MODAL --- */
-        .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 3000;
-            padding: 20px;
-        }
-        .modal-content {
-            background: var(--bg-color);
-            max-width: 600px;
-            width: 100%;
-            border-radius: 30px;
-            padding: 40px;
+        /* --- ENHANCED REFLECTION --- */
+        .reflection-container { display: flex; flex-direction: column; gap: 20px; }
+        .reflection-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            border-left: 5px solid var(--accent-color);
             position: relative;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
+        .reflection-card:hover { transform: translateX(10px); background: #fff; }
+        .reflection-card h4 { color: var(--accent-color); margin-bottom: 10px; font-size: 1.1rem; }
+        .reflection-card p { font-size: 0.95rem; line-height: 1.6; color: var(--text-dim); }
+
+        /* --- MODAL --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; }
+        .modal-content { background: var(--bg-color); max-width: 600px; width: 100%; border-radius: 30px; padding: 40px; position: relative; }
         .close-modal { position: absolute; top: 20px; right: 25px; font-size: 2rem; cursor: pointer; }
 
-        /* --- REFLECTION --- */
-        .reflection-item { margin-bottom: 30px; padding-left: 20px; border-left: 4px solid var(--accent-color); }
-
         @media (max-width: 768px) {
-            .hero-layout { flex-direction: column; text-align: center; }
+            .hero-container { flex-direction: column; text-align: center; }
+            .hero-right img { display: none; }
             .bento-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <div id="front-page">
-        <h1 style="font-size: 2.5rem; margin-bottom: 20px;">Welcome to My Portfolio</h1>
-        <button class="get-started-btn" onclick="getStarted()">Get Started</button>
+    <div class="back-arrow" onclick="goBackToFront()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
     </div>
 
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
+    <div id="front-page">
+        <div class="hero-container">
+            <div class="hero-left">
+                <h3>PORTFOLIO 2025</h3>
+                <h1>CREATIVE<br>WEB SOLUTIONS</h1>
+                <p>Hi, I'm Rhea Mae. A developer passionate about creating helpful and clean web solutions that improve the daily lives of users.</p>
+                <button class="get-started-btn" onclick="getStarted()">EXPLORE WORK</button>
+            </div>
+            <div class="hero-right">
+                <img src="Profile.jpg" alt="Rhea Mae Ramos">
+            </div>
+        </div>
+    </div>
 
     <nav>
         <button class="nav-btn active" onclick="showSection('home', this)">Home</button>
@@ -291,7 +252,6 @@
     </nav>
 
     <main class="content-wrapper">
-        
         <section id="home" class="section active">
             <div class="card">
                 <div class="hero-layout">
@@ -303,7 +263,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="bento-grid">
                 <div class="card">
                     <h4 style="color: var(--accent-color); margin-bottom: 10px;">Biggest Accomplishment</h4>
@@ -314,7 +273,6 @@
                     <p style="font-size: 0.95rem; line-height: 1.6;">I am very interested in <strong>Full Stack Web Development</strong>. To build dynamic and responsive website.</p>
                 </div>
             </div>
-
             <div class="card">
                 <h4 style="color: var(--accent-color); margin-bottom: 10px;">My Goals</h4>
                 <p style="font-size: 0.95rem; line-height: 1.6;">My goal is to build helpful online applications that make daily tasks easier for people. I want to use my coding skills to create clean and useful tools for the community.</p>
@@ -326,32 +284,14 @@
                 <h2 style="margin-bottom: 30px;">Technical Toolkit</h2>
                 <div class="skills-grid">
                     <div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>🌐 HTML5 / CSS3</span><span>85%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%;"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>🐘 PHP</span><span>80%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>📜 JavaScript</span><span>85%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 75%;"></div></div>
-                        </div>
+                        <div class="skill-item"><div class="skill-info"><span>🌐 HTML5 / CSS3</span><span>85%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%;"></div></div></div>
+                        <div class="skill-item"><div class="skill-info"><span>🐘 PHP</span><span>80%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div></div>
+                        <div class="skill-item"><div class="skill-info"><span>📜 JavaScript</span><span>85%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 75%;"></div></div></div>
                     </div>
                     <div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>🗄️ MySQL / XAMPP</span><span>83%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>🐙 GitHub</span><span>85%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%;"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>💻 VS Code</span><span>83%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%;"></div></div>
-                        </div>
+                        <div class="skill-item"><div class="skill-info"><span>🗄️ MySQL / XAMPP</span><span>83%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div></div>
+                        <div class="skill-item"><div class="skill-info"><span>🐙 GitHub</span><span>85%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%;"></div></div></div>
+                        <div class="skill-item"><div class="skill-info"><span>💻 VS Code</span><span>83%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%;"></div></div></div>
                     </div>
                 </div>
             </div>
@@ -362,54 +302,46 @@
             <div class="project-grid">
                 <div class="project-box">
                     <img src="Profiling.jpg" alt="Barangay Profiling" class="project-img">
-                    <div class="project-content">
-                        <h4>Barangay Profiling System</h4>
-                        <button class="view-work-btn" onclick="openProject('barangay')">View Work</button>
-                    </div>
+                    <div class="project-content"><h4>Barangay Profiling System</h4><button class="view-work-btn" onclick="openProject('barangay')">View Work</button></div>
                 </div>
                 <div class="project-box">
                     <img src="TrackingandMonitoring.jpg" alt="Bus Tracking" class="project-img">
-                    <div class="project-content">
-                        <h4>Bus Tracking & Schedule Monitoring</h4>
-                        <button class="view-work-btn" onclick="openProject('bus')">View Work</button>
-                    </div>
+                    <div class="project-content"><h4>Bus Tracking & Schedule Monitoring</h4><button class="view-work-btn" onclick="openProject('bus')">View Work</button></div>
                 </div>
                 <div class="project-box">
                     <img src="StudyPortal.jpg" alt="Smart Study" class="project-img">
-                    <div class="project-content">
-                        <h4>Smart Study App</h4>
-                        <button class="view-work-btn" onclick="openProject('study')">View Work</button>
-                    </div>
+                    <div class="project-content"><h4>Smart Study App</h4><button class="view-work-btn" onclick="openProject('study')">View Work</button></div>
                 </div>
             </div>
         </section>
 
         <section id="reflection" class="section">
-            <div class="card">
-                <h2 style="margin-bottom: 40px;">Self-Reflection</h2>
-                <div class="reflection-item">
-                    <h4>a. What technologies did you use and why?</h4>
-                    <p style="color: var(--text-dim);">I used <strong>HTML, CSS, and JavaScript</strong> for the design and the <strong>modern style</strong>, which makes the site look modern and clean. I also used <strong>PHP and MySQL</strong> for my projects because they are great for handling information and building systems that need a database, like my profiling and tracking tools.</p>
-                </div>
-                <div class="reflection-item">
-                    <h4>b. Which parts of the portfolio were easiest for you?</h4>
-                    <p style="color: var(--text-dim);">The easiest part for me was planning the layout and organizing the text. I enjoyed writing about my background and my school projects because it helped me see how much I have learned since I started coding.</p>
-                </div>
-                <div class="reflection-item">
-                    <h4>c. Which parts were most challenging?</h4>
-                    <p style="color: var(--text-dim);">The hardest part was the <strong>JavaScript logic</strong> that hides and shows the different sections. I had to make sure that when you click a button, only the right page appears without any errors. It was tough, but it makes the website much faster and better to use.</p>
-                </div>
-                <div class="reflection-item">
-                    <h4>d. What technologies are you most interested in learning?</h4>
-                    <p style="color: var(--text-dim);">I am really interested in learning <strong>React.js</strong> and <strong>Laravel</strong>. These are popular tools used in the industry, and learning them will help me build more advanced and professional web applications in the future.</p>
-                </div>
-                <div class="reflection-item" style="border:none;">
-                    <h4>e. What kind of applications do you want to build in the future?</h4>
-                    <p style="color: var(--text-dim);">In the future, I want to build <strong>online applications</strong> that make daily tasks easier for people. I want to use my coding skills to create clean and useful tools for the community.</p>
+            <div class="card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
+                <h2 style="margin-bottom: 30px; text-align: center;">My Reflection</h2>
+                <div class="reflection-container">
+                    <div class="reflection-card">
+                        <h4>a. What technologies did you use and why?</h4>
+                        <p>I used <strong>HTML, CSS, and JavaScript</strong> for the design and the <strong>modern style</strong>, which makes the site look modern and clean. I also used <strong>PHP and MySQL</strong> for my projects because they are great for handling information and building systems that need a database, like my profiling and tracking tools.</p>
+                    </div>
+                    <div class="reflection-card">
+                        <h4>b. Which parts of the portfolio were easiest for you?</h4>
+                        <p>The easiest part for me was planning the layout and organizing the text. I enjoyed writing about my background and my school projects because it helped me see how much I have learned since I started coding.</p>
+                    </div>
+                    <div class="reflection-card">
+                        <h4>c. Which parts were most challenging?</h4>
+                        <p>The hardest part was the <strong>JavaScript logic</strong> that hides and shows the different sections. I had to make sure that when you click a button, only the right page appears without any errors. It was tough, but it makes the website much faster and better to use.</p>
+                    </div>
+                    <div class="reflection-card">
+                        <h4>d. What technologies are you most interested in learning?</h4>
+                        <p>I am really interested in learning <strong>React.js</strong> and <strong>Laravel</strong>. These are popular tools used in the industry, and learning them will help me build more advanced and professional web applications in the future.</p>
+                    </div>
+                    <div class="reflection-card">
+                        <h4>e. What kind of applications do you want to build in the future?</h4>
+                        <p>In the future, I want to build <strong>online applications</strong> that make daily tasks easier for people. I want to use my coding skills to create clean and useful tools for the community.</p>
+                    </div>
                 </div>
             </div>
         </section>
-
     </main>
 
     <div id="projectModal" class="modal">
@@ -421,6 +353,7 @@
 
     <script>
         function getStarted() { document.getElementById('front-page').classList.add('hidden'); }
+        function goBackToFront() { document.getElementById('front-page').classList.remove('hidden'); }
 
         function showSection(sectionId, btn) {
             const sections = document.querySelectorAll('.section');
